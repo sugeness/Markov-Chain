@@ -11,22 +11,28 @@ namespace Markov_Chain_Sentence_Generator
     {
         public static void BuildDictionary(WordsProbability[] wordsInChain, string sentence)
         {
-            string[] words = Regex.Split(sentence, "[., ?!:]");
+            string[] words = Regex.Split(sentence, "\\W");
+            //If programm encounters same word, it adds it number in this list
             List<int> usedWords = new List<int>();
             for (int i = 0; i < words.Length; i++)
             {
+                //If this word is already in array, then current i is empty string and loop moves onto next i
                 if (usedWords.Contains(i))
                 {
                     wordsInChain[i] = new WordsProbability("");
                     continue;
                 }
+
                 wordsInChain[i] = new WordsProbability(words[i]);
+
+                //Adds word after current into dictionary
                 for (int j = i + 1; j < words.Length - 1; j++)
                 {
                     if(j == i + 1)
                     {
                         wordsInChain[i].SetSequence(words[j]);
                     }
+                    //if next word is already present add j into list
                     if (words[j].Equals(wordsInChain[i]._Word))
                     {
                         usedWords.Add(j);
@@ -45,8 +51,8 @@ namespace Markov_Chain_Sentence_Generator
             int value = 0;
             int wordsInSentence = 0;
             string sentence = "";
-            //string lastWord = "";
-
+            
+            //First word is picked at random
             while (!end)
             {
                 value = random.Next(words.Length);
@@ -61,6 +67,7 @@ namespace Markov_Chain_Sentence_Generator
 
             for (int i = 0; i < words.Length; i++)
             {
+                //In case the sentence is too big
                 if (wordsInSentence >= words.Length / 2)
                     break;
                 if (!previousWord._Word.Equals(words[i]._Word) & !words[i]._Word.Equals(""))
@@ -72,11 +79,11 @@ namespace Markov_Chain_Sentence_Generator
                         {
                             sentence += words[i]._Word + " ";
                             previousWord = words[i];
-                            i = 0;                            
+                            i = 0;                             
                             wordsInSentence++;
                         }
                     }
-                    else
+                    else //If dictionary is null then no word will come after current
                     {
                         break;
                     }

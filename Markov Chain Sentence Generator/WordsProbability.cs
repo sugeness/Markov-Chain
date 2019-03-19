@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Markov_Chain_Sentence_Generator
 {
+    //Contains info about word and its sequences(word that come after it, and how often)
     struct WordsProbability
     {
         public string _Word
