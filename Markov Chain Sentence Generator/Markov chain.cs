@@ -18,7 +18,7 @@ namespace Markov_Chain_Sentence_Generator
             for (int i = 0; i < words.Length; i++)
             {
                 //If this word is already in array, then current i is empty string and loop moves onto next i
-                if (usedWords.Contains(i))
+                if (i > 0 & usedWords.Contains(i))
                 {
                     wordsInChain[i] = new WordsProbability("");
                     continue;
@@ -33,7 +33,7 @@ namespace Markov_Chain_Sentence_Generator
                     {
                         wordsInChain[i].SetSequence(words[j]);
                     }
-                    //if next word is already present add j into list
+                    //if word is already present add j into list
                     if (CheckSameWord(words[j], wordsInChain[i]))
                     {
                         usedWords.Add(j);
@@ -69,7 +69,7 @@ namespace Markov_Chain_Sentence_Generator
             //First word is picked at random
             while (!end)
             {
-                value = random.Next(words.Length);
+                value = random.Next(words.Length - 1); //words.Length - 1, because last word would not have any word after
                 if (!words[value]._Word.Equals(""))
                 {
                     sentence += words[value]._Word + " ";
@@ -89,13 +89,18 @@ namespace Markov_Chain_Sentence_Generator
                     Dictionary<string, int> previousWordDictonary = previousWord._Sequence;
                     if (!previousWordDictonary.Equals(null))
                     {
-                        if (previousWordDictonary.Keys.Contains(words[i]._Word))
+                        string nextWord = PickWord(previousWordDictonary);
+                        sentence += nextWord + " ";
+                        for(int j = 0; j < words.Length; j++)
                         {
-                            sentence += words[i]._Word + " ";
-                            previousWord = words[i];
-                            i = 0;                             
-                            wordsInSentence++;
+                            if (nextWord.Equals(words[j]._Word))
+                            {
+                                previousWord = words[j];
+                                break;
+                            }
                         }
+                        i = 0;
+                        wordsInSentence++;
                     }
                     else //If dictionary is null then no word will come after current
                     {
@@ -106,6 +111,30 @@ namespace Markov_Chain_Sentence_Generator
             return sentence;
         }
 
+        private static string PickWord(Dictionary<string, int> pairs)
+        {
+            //If there can be only one word after current then return it
+            if (pairs.Count == 1)
+            {
+                return pairs.Keys.ToList()[0];
+            }
+            double[] pickChance = new double[pairs.Count];
+            double max = 0d;
+            int maxNumber = 0;
+            Random random = new Random();
+            //Determines chance of a word gettin picked
+            for(int i = 0; i < pairs.Count; i++)
+            {
+                pickChance[i] = random.NextDouble() * pairs.Values.ToList()[i];
+                if(pickChance[i] > max)
+                {
+                    max = pickChance[i];
+                    maxNumber = i;
+                }
+            }
+
+            return pairs.Keys.ToList()[maxNumber];
+        }
         private static bool EndSentece()
         {
             Random random = new Random();
