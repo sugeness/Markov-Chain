@@ -11,6 +11,7 @@ namespace Markov_Chain_Sentence_Generator
     {
         public static void BuildDictionary(WordsProbability[] wordsInChain, string sentence)
         {
+            
             string[] words = Regex.Split(sentence, "\\W");
             //If programm encounters same word, it adds it number in this list
             List<int> usedWords = new List<int>();
@@ -33,7 +34,7 @@ namespace Markov_Chain_Sentence_Generator
                         wordsInChain[i].SetSequence(words[j]);
                     }
                     //if next word is already present add j into list
-                    if (words[j].Equals(wordsInChain[i]._Word))
+                    if (CheckSameWord(words[j], wordsInChain[i]))
                     {
                         usedWords.Add(j);
                         wordsInChain[i].SetSequence(words[j + 1]);
@@ -42,7 +43,20 @@ namespace Markov_Chain_Sentence_Generator
                     
             }
         }
-
+        //Checks if words are same by comparing every character
+        private static bool CheckSameWord(string word, WordsProbability chain)
+        {
+            char[] wordArray = word.ToCharArray();
+            char[] chainArray = chain._Word.ToCharArray();
+            if (wordArray.Length != chainArray.Length)
+                return false;
+            for(uint i = 0; i < wordArray.Length; i++)
+            {
+                if (char.ToLower(wordArray[i]) != char.ToLower(chainArray[i]))
+                    return false;
+            }
+            return true;
+        }
         public static string MakeSentence(WordsProbability[] words)
         {
             Random random = new Random();

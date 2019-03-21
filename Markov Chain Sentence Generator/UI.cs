@@ -42,8 +42,8 @@ namespace Markov_Chain_Sentence_Generator
             {
                 Console.WriteLine($"Sentence {i}: {_speech[i]}");
             }
-            int userChoice = 0;
-            while(userChoice < 1 || userChoice >= _speech.Length)
+            int userChoice = -1;
+            while(userChoice < 0 || userChoice >= _speech.Length)
             {
                 try
                 {
