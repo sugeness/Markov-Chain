@@ -46,6 +46,7 @@
     <Compile Include="Markov chain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI.cs" />
     <Compile Include="WordsProbability.cs" />
   </ItemGroup>
   <ItemGroup>

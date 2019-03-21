@@ -11,15 +11,31 @@ namespace Markov_Chain_Sentence_Generator
     {
         static void Main(string[] args)
         {
-            //Add any text in this variable
-            string speech = "I have a vivid memory of what happened, and it was not what I expected. I expected to be applauded for my cleverness and arithmetic skills.";
             //Split sentences into words
-            WordsProbability[] words = new WordsProbability[Regex.Split(speech, "\\W").Length];
-            Markov_chain.BuildDictionary(words, speech);
-            
+            int userChoice = 0;
+            string chosenText = "";
+            UI.Menu(ref userChoice);
+            switch (userChoice)
+            {
+                case 1:
+                    chosenText = UI.ChooseSentence();
+                    break;
+                case 2:
+                    Console.WriteLine("Enter your text: ");
+                    chosenText = Console.ReadLine();
+                    break;
+                default:
+                    break;
+            }
+            if (!chosenText.Equals(""))
+            {
+                WordsProbability[] words = new WordsProbability[Regex.Split(chosenText, "\\W").Length];
+                Markov_chain.BuildDictionary(words, chosenText);
 
-            string newSentence = Markov_chain.MakeSentence(words);
-            Console.WriteLine(newSentence);
+
+                string newSentence = Markov_chain.MakeSentence(words);
+                Console.WriteLine($"Result: {newSentence}");
+            }
             Console.ReadKey();
         }
     }
